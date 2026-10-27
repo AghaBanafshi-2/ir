@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "ir-cheat",
+  "version": "${version}",
+  "name": "IR CHEAT",
+  "description": "IR Cheat Client for MC 1.21.5 — Telegram: @AghaBanafshi",
+  "authors": ["TheAghaBanafshii"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.aghabanafshi.ircheat.IRCheat"]
+  },
+  "mixins": ["ircheat.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
