@@ -16,7 +16,7 @@ public class Strength extends Module {
         // اثر Strength سطح 255 (amplifier = 254)
         mc.player.addStatusEffect(new StatusEffectInstance(
             StatusEffects.STRENGTH,
-            60,     // مدت: 3 ثانیه (هر تیک تمدید می‌شود)
+            60,     // مدت: 3 ثانیه
             254,    // سطح 255
             false,  // ambient
             false,  // showParticles
