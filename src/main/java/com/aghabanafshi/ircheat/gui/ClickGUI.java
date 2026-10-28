@@ -2,6 +2,7 @@ package com.aghabanafshi.ircheat.gui;
 
 import com.aghabanafshi.ircheat.module.Module;
 import com.aghabanafshi.ircheat.module.ModuleManager;
+import com.aghabanafshi.ircheat.module.impl.combat.KillAura;
 import com.aghabanafshi.ircheat.module.impl.misc.Spam;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,13 +24,12 @@ public class ClickGUI extends Screen {
 
         List<Module> modules = ModuleManager.getAll();
         int centerX = this.width / 2;
-        int startY = this.height / 2 - (modules.size() * 25) / 2;
+        int startY = Math.max(30, this.height / 2 - (modules.size() * 25) / 2);
 
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
             int y = startY + (i * 25);
 
-            // دکمه اصلی (چپ‌کلیک = toggle)
             ButtonWidget button = ButtonWidget.builder(
                 getModuleText(module),
                 b -> {
@@ -39,11 +39,20 @@ public class ClickGUI extends Screen {
             ).dimensions(centerX - 100, y, 160, 20).build();
             this.addDrawableChild(button);
 
-            // دکمه تنظیمات (فقط برای Spam)
+            // دکمه تنظیمات برای Spam
             if (module instanceof Spam) {
                 ButtonWidget configButton = ButtonWidget.builder(
                     Text.literal("⚙").formatted(Formatting.YELLOW),
                     b -> this.client.setScreen(new SpamConfigScreen(this))
+                ).dimensions(centerX + 65, y, 35, 20).build();
+                this.addDrawableChild(configButton);
+            }
+
+            // دکمه تنظیمات برای KillAura
+            if (module instanceof KillAura ka) {
+                ButtonWidget configButton = ButtonWidget.builder(
+                    Text.literal("⚙").formatted(Formatting.YELLOW),
+                    b -> this.client.setScreen(new KillAuraConfigScreen(this, ka))
                 ).dimensions(centerX + 65, y, 35, 20).build();
                 this.addDrawableChild(configButton);
             }
@@ -80,4 +89,4 @@ public class ClickGUI extends Screen {
     public boolean shouldPause() {
         return false;
     }
-}
+                     }
