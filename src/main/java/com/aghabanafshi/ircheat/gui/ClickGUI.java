@@ -4,6 +4,7 @@ import com.aghabanafshi.ircheat.module.Module;
 import com.aghabanafshi.ircheat.module.ModuleManager;
 import com.aghabanafshi.ircheat.module.impl.combat.KillAura;
 import com.aghabanafshi.ircheat.module.impl.misc.Spam;
+import com.aghabanafshi.ircheat.module.impl.player.EnchantGiver;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -56,6 +57,15 @@ public class ClickGUI extends Screen {
                 ).dimensions(centerX + 65, y, 35, 20).build();
                 this.addDrawableChild(configButton);
             }
+
+            // دکمه تنظیمات برای EnchantGiver
+            if (module instanceof EnchantGiver eg) {
+                ButtonWidget configButton = ButtonWidget.builder(
+                    Text.literal("⚙").formatted(Formatting.YELLOW),
+                    b -> this.client.setScreen(new EnchantGiverConfigScreen(this, eg))
+                ).dimensions(centerX + 65, y, 35, 20).build();
+                this.addDrawableChild(configButton);
+            }
         }
 
         ButtonWidget closeButton = ButtonWidget.builder(
@@ -89,4 +99,4 @@ public class ClickGUI extends Screen {
     public boolean shouldPause() {
         return false;
     }
-                     }
+}
