@@ -3,6 +3,7 @@ package com.aghabanafshi.ircheat.module;
 import com.aghabanafshi.ircheat.module.impl.combat.WTap;
 import com.aghabanafshi.ircheat.module.impl.misc.Spam;
 import com.aghabanafshi.ircheat.module.impl.movement.BoatFly;
+import com.aghabanafshi.ircheat.module.impl.movement.Fly;
 import com.aghabanafshi.ircheat.module.impl.movement.NoFallDamage;
 import com.aghabanafshi.ircheat.module.impl.player.SpeedMine;
 import java.util.ArrayList;
@@ -12,8 +13,9 @@ public class ModuleManager {
     private static final List<Module> MODULES = new ArrayList<>();
 
     public static void init() {
-        MODULES.add(new WTap());
+        MODULES.add(new Fly());
         MODULES.add(new NoFallDamage());
+        MODULES.add(new WTap());
         MODULES.add(new SpeedMine());
         MODULES.add(new BoatFly());
         MODULES.add(new Spam());
