@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class EnchantGiver extends Module {
 
+    // در 1.21.5، Enchantments.SHARPNESS و سایر موارد از نوع RegistryKey هستند
     public static final Map<String, RegistryKey<Enchantment>> ENCHANTS = new LinkedHashMap<>();
     static {
         ENCHANTS.put("Sharpness", Enchantments.SHARPNESS);
@@ -50,14 +51,17 @@ public class EnchantGiver extends Module {
         RegistryKey<Enchantment> key = ENCHANTS.get(selectedEnchant);
         if (key == null) return;
 
-        // دریافت Registry از world و تبدیل key به entry
-        RegistryEntry<Enchantment> entry = mc.world.getRegistryManager()
-                .get(RegistryKeys.ENCHANTMENT)
-                .getEntry(key)
-                .orElse(null);
+        // در 1.21.5، از طریق RegistryAccess (یعنی RegistryManager) رجیستری را دریافت کنید
+        // توجه: getOrThrow یک Registry<Enchantment> برمی‌گرداند
+        var registry = mc.world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT);
 
-        if (entry == null) return;
+        // از متد getEntry برای دریافت RegistryEntry استفاده کنید
+        var entryOpt = registry.getEntry(key);
 
-        stack.addEnchantment(entry, level);
+        if (entryOpt.isPresent()) {
+            // entryOpt.get() یک RegistryEntry.Reference<Enchantment> است
+            // متد addEnchantment در 1.21.5 نیاز به RegistryEntry<Enchantment> دارد
+            stack.addEnchantment(entryOpt.get(), level);
+        }
     }
 }
