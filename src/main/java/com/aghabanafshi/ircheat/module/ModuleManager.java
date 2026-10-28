@@ -7,6 +7,7 @@ import com.aghabanafshi.ircheat.module.impl.misc.Spam;
 import com.aghabanafshi.ircheat.module.impl.movement.BoatFly;
 import com.aghabanafshi.ircheat.module.impl.movement.Fly;
 import com.aghabanafshi.ircheat.module.impl.movement.NoFallDamage;
+import com.aghabanafshi.ircheat.module.impl.player.EnchantGiver;
 import com.aghabanafshi.ircheat.module.impl.player.SpeedMine;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ModuleManager {
         MODULES.add(new Spam());
         MODULES.add(new KillAura());
         MODULES.add(new Strength());
+        MODULES.add(new EnchantGiver());
     }
 
     public static void onTick() {
