@@ -11,11 +11,9 @@ import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class EnchantGiver extends Module {
 
-    // در 1.21.5، Enchantments.SHARPNESS از نوع RegistryKey است
     public static final Map<String, RegistryKey<Enchantment>> ENCHANTS = new LinkedHashMap<>();
     static {
         ENCHANTS.put("Sharpness", Enchantments.SHARPNESS);
@@ -52,15 +50,14 @@ public class EnchantGiver extends Module {
         RegistryKey<Enchantment> key = ENCHANTS.get(selectedEnchant);
         if (key == null) return;
 
-        // تبدیل RegistryKey به RegistryEntry از طریق Registry بازی
-        Optional<RegistryEntry.Reference<Enchantment>> entryOpt =
-                mc.world.getRegistryManager()
-                        .getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
-                        .getOptional(key);
+        // دریافت Registry از world و تبدیل key به entry
+        RegistryEntry<Enchantment> entry = mc.world.getRegistryManager()
+                .get(RegistryKeys.ENCHANTMENT)
+                .getEntry(key)
+                .orElse(null);
 
-        if (entryOpt.isEmpty()) return;
+        if (entry == null) return;
 
-        // اعمال enchantment
-        stack.addEnchantment(entryOpt.get(), level);
+        stack.addEnchantment(entry, level);
     }
 }
