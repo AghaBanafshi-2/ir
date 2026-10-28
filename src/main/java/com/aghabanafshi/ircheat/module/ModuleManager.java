@@ -1,10 +1,13 @@
 package com.aghabanafshi.ircheat.module;
 
+import com.aghabanafshi.ircheat.module.impl.combat.KillAura;
+import com.aghabanafshi.ircheat.module.impl.combat.Strength;
 import com.aghabanafshi.ircheat.module.impl.combat.WTap;
 import com.aghabanafshi.ircheat.module.impl.misc.Spam;
 import com.aghabanafshi.ircheat.module.impl.movement.BoatFly;
 import com.aghabanafshi.ircheat.module.impl.movement.Fly;
 import com.aghabanafshi.ircheat.module.impl.movement.NoFallDamage;
+import com.aghabanafshi.ircheat.module.impl.player.EffectGiver;
 import com.aghabanafshi.ircheat.module.impl.player.SpeedMine;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,9 @@ public class ModuleManager {
         MODULES.add(new SpeedMine());
         MODULES.add(new BoatFly());
         MODULES.add(new Spam());
+        MODULES.add(new KillAura());
+        MODULES.add(new Strength());
+        MODULES.add(new EffectGiver());
     }
 
     public static void onTick() {
