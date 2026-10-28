@@ -5,14 +5,18 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class EnchantGiver extends Module {
-    // لیست enchantment های قابل انتخاب (می‌توانید خودتان اضافه کنید)
-    public static final Map<String, RegistryEntry<Enchantment>> ENCHANTS = new LinkedHashMap<>();
+
+    // در 1.21.5، Enchantments.SHARPNESS از نوع RegistryKey است
+    public static final Map<String, RegistryKey<Enchantment>> ENCHANTS = new LinkedHashMap<>();
     static {
         ENCHANTS.put("Sharpness", Enchantments.SHARPNESS);
         ENCHANTS.put("Smite", Enchantments.SMITE);
@@ -40,15 +44,23 @@ public class EnchantGiver extends Module {
     @Override
     public void onTick() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null) return;
+        if (mc.player == null || mc.world == null) return;
 
         ItemStack stack = mc.player.getMainHandStack();
         if (stack.isEmpty()) return;
 
-        RegistryEntry<Enchantment> ench = ENCHANTS.get(selectedEnchant);
-        if (ench == null) return;
+        RegistryKey<Enchantment> key = ENCHANTS.get(selectedEnchant);
+        if (key == null) return;
 
-        // افزودن enchantment به آیتم در دست (بازنویسی سطح موجود)
-        stack.addEnchantment(ench, level);
+        // تبدیل RegistryKey به RegistryEntry از طریق Registry بازی
+        Optional<RegistryEntry.Reference<Enchantment>> entryOpt =
+                mc.world.getRegistryManager()
+                        .getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
+                        .getOptional(key);
+
+        if (entryOpt.isEmpty()) return;
+
+        // اعمال enchantment
+        stack.addEnchantment(entryOpt.get(), level);
     }
-                     }
+}
