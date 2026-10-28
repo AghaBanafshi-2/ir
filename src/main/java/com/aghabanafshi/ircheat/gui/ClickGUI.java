@@ -1,12 +1,15 @@
 package com.aghabanafshi.ircheat.gui;
 
+import com.aghabanafshi.ircheat.module.Module;
 import com.aghabanafshi.ircheat.module.ModuleManager;
-import com.aghabanafshi.ircheat.module.impl.movement.Fly;
+import com.aghabanafshi.ircheat.module.impl.misc.Spam;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+
+import java.util.List;
 
 public class ClickGUI extends Screen {
 
@@ -18,43 +21,52 @@ public class ClickGUI extends Screen {
     protected void init() {
         super.init();
 
+        List<Module> modules = ModuleManager.getAll();
         int centerX = this.width / 2;
-        int startY = this.height / 2 - 40;
+        int startY = this.height / 2 - (modules.size() * 25) / 2;
 
-        // --- دکمه Fly ---
-        Fly fly = ModuleManager.get(Fly.class);
-        if (fly != null) {
-            ButtonWidget flyButton = ButtonWidget.builder(
-                getFlyText(fly),
-                button -> {
-                    fly.toggle();
-                    button.setMessage(getFlyText(fly));
+        for (int i = 0; i < modules.size(); i++) {
+            Module module = modules.get(i);
+            int y = startY + (i * 25);
+
+            // دکمه اصلی (چپ‌کلیک = toggle)
+            ButtonWidget button = ButtonWidget.builder(
+                getModuleText(module),
+                b -> {
+                    module.toggle();
+                    b.setMessage(getModuleText(module));
                 }
-            ).dimensions(centerX - 100, startY, 200, 20).build();
-            this.addDrawableChild(flyButton);
+            ).dimensions(centerX - 100, y, 160, 20).build();
+            this.addDrawableChild(button);
+
+            // دکمه تنظیمات (فقط برای Spam)
+            if (module instanceof Spam) {
+                ButtonWidget configButton = ButtonWidget.builder(
+                    Text.literal("⚙").formatted(Formatting.YELLOW),
+                    b -> this.client.setScreen(new SpamConfigScreen(this))
+                ).dimensions(centerX + 65, y, 35, 20).build();
+                this.addDrawableChild(configButton);
+            }
         }
 
-        // --- دکمه Close ---
         ButtonWidget closeButton = ButtonWidget.builder(
             Text.literal("Close").formatted(Formatting.RED),
             button -> this.close()
-        ).dimensions(centerX - 100, startY + 60, 200, 20).build();
+        ).dimensions(centerX - 100, startY + (modules.size() * 25) + 10, 200, 20).build();
         this.addDrawableChild(closeButton);
     }
 
-    private Text getFlyText(Fly fly) {
-        String status = fly.isEnabled() ? "ON" : "OFF";
-        Formatting color = fly.isEnabled() ? Formatting.GREEN : Formatting.GRAY;
-        return Text.literal("Fly: " + status).formatted(color);
+    private Text getModuleText(Module module) {
+        String status = module.isEnabled() ? "ON" : "OFF";
+        Formatting color = module.isEnabled() ? Formatting.GREEN : Formatting.GRAY;
+        return Text.literal(module.getName() + ": " + status).formatted(color);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // پس‌زمینه تیره نیمه‌شفاف
         this.renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
 
-        // عنوان بالای صفحه
         context.drawCenteredTextWithShadow(
             this.textRenderer,
             this.title,
@@ -66,6 +78,6 @@ public class ClickGUI extends Screen {
 
     @Override
     public boolean shouldPause() {
-        return false; // بازی در پس‌زمینه متوقف نشود
+        return false;
     }
-    }
+}
